@@ -122,7 +122,7 @@ export const fetchUser = async (req: Request, res: Response) => {
       .status(400)
       .send({ errors: { msg: "Id of the user not provided", param: "id" } });
 
-  if (!id.match(/^[0-9a-fA-F]{24}$/))
+  if (!mongoose.Types.ObjectId.isValid(id))
     return res
       .status(400)
       .send({ errors: { msg: "Mongo id is not valid", param: "id" } });
