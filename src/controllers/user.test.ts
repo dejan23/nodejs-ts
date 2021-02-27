@@ -1,7 +1,6 @@
 import request from "supertest";
 import { app } from "../app";
 import { User } from "../models/user";
-import { auth } from "../services/auth";
 
 describe("tests signup", () => {
   it("returns a 201 on successful signup", async () => {
@@ -275,7 +274,7 @@ describe("tests like user", () => {
   });
 
   it("returns a 400 on invalid mongo id", async () => {
-    const user = await createUser("someuser");
+    await createUser("someuser");
 
     const response1 = await request(app).post(`/signin`).send({
       username: "someuser",
@@ -352,7 +351,7 @@ describe("tests unlike user", () => {
   });
 
   it("returns a 400 on invalid mongo id", async () => {
-    const user = await createUser("someuser");
+    await createUser("someuser");
 
     const response1 = await request(app).post(`/signin`).send({
       username: "someuser",
@@ -369,11 +368,45 @@ describe("tests unlike user", () => {
   });
 });
 
-const createUser = async (username: string) => {
+describe("tests most liked", () => {
+  it("returns true if its descending order", async () => {
+    await createUser("someuser1", 1);
+    await createUser("someuser2", 4);
+    await createUser("someuser3", 5);
+    await createUser("someuser3", 2);
+
+    const response = await request(app).get(`/most-liked`);
+
+    const max = Math.max.apply(
+      Math,
+      response.body.users.map(function (user: any) {
+        return user.likes;
+      })
+    );
+
+    expect(max === response.body.users[0].likes).toEqual(true);
+  });
+});
+
+describe("tests auth token", () => {
+  it("returns 403 because of wrong token", async () => {
+    const invalidToken = [
+      "token=yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwM2E4NTFiYmVkOTZhMTRiYmQ5ZGZhZSIsInVzZXJuYW1lIjoic29tZXVzZXIiLCJleHAiOjE2MTQ0NTE0OTksImlhdCI6MTYxNDQ0Nzg5OX0.FHT78q5aNN5JnyCj2XCwyjGGkUFgQiwMu4WCQ0I5PQ4; Path=/",
+    ];
+
+    const response = await request(app).get(`/me`).set("Cookie", invalidToken);
+
+    expect(response.status).toEqual(403);
+  });
+});
+
+const createUser = async (username: string, likes?: number) => {
   const user = new User();
 
   user.username = username;
   user.password = "password";
+
+  if (likes) user.likes = likes;
 
   const response = await user.save();
   return response;
