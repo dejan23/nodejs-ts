@@ -3,10 +3,6 @@ services:
   mongo:
     container_name: mongo
     image: 'mongo'
-    volumes:
-      - ./data/db:/data/db
-    ports:
-      - "27017:27017"
   server:
     container_name: server
     build: .
