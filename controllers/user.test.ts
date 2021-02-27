@@ -369,7 +369,7 @@ describe("tests unlike user", () => {
   });
 });
 
-const createUser = async (username) => {
+const createUser = async (username: string) => {
   const user = new User();
 
   user.username = username;

@@ -236,5 +236,5 @@ export const mostLiked = async (req: Request, res: Response) => {
   const users = await User.find().sort({ likes: -1 });
   return res
     .status(200)
-    .send({ users, msg: `Users with most likes descending ordeer.` });
+    .send({ users, msg: `Users with most likes descending order.` });
 };

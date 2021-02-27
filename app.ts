@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { json } from "body-parser";
 import cookieParser from "cookie-parser";
 
@@ -8,5 +8,7 @@ app.use(json());
 app.use(cookieParser());
 
 require("./routes/userRoutes")(app);
+
+app.get("/", (req: Request, res: Response) => res.send("/"));
 
 export { app };
