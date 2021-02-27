@@ -27,7 +27,6 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     req.currentUser = payload;
     next();
   } catch (err) {
-    console.log("AUTH ERR");
     return res.status(403).send({ errors: { msg: "Invalid token" } });
   }
 };
