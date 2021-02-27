@@ -7,13 +7,13 @@
     "start": "ts-node index.ts",
     "dev": "nodemon index.ts",
     "test-dev": "jest --coverage --watchAll --no-cache",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
     "setupFilesAfterEnv": [
-      "./test/setup.ts"
+      "./src/test/setup.ts"
     ]
   },
   "author": "",
